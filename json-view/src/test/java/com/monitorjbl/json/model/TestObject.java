@@ -2,6 +2,8 @@ package com.monitorjbl.json.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.monitorjbl.json.MyDateSerializer;
 
 import java.math.BigDecimal;
 import java.net.URI;
@@ -41,6 +43,9 @@ public class TestObject implements TestInterface {
   private URI uri;
   private Class cls;
   private BigDecimal bigDecimal;
+  
+  @JsonSerialize(using=MyDateSerializer.class)
+  private Date dateWithSerializer;
 
   public String getStr1() {
     return str1;
@@ -217,4 +222,15 @@ public class TestObject implements TestInterface {
   public void setBigDecimal(BigDecimal bigDecimal) {
     this.bigDecimal = bigDecimal;
   }
+  
+  
+  public Date getDateWithSerializer() {
+    return dateWithSerializer;
+  }
+  
+  public void setDateWithSerializer(Date dateWithSerializer) {
+    this.dateWithSerializer = dateWithSerializer;
+  }
+  
+  
 }

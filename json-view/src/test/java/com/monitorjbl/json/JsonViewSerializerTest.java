@@ -429,6 +429,19 @@ public class JsonViewSerializerTest {
   }
 
   @Test
+  public void testDateWithSerializer() throws Exception {
+      
+    TestObject ref = new TestObject();
+    ref.setDateWithSerializer(new Date());
+
+    SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    
+    String serialized = sut.writeValueAsString(JsonView.with(ref));
+    Map<String, Object> obj = sut.readValue(serialized, HashMap.class);
+    assertEquals(fmt.format(ref.getDateWithSerializer()), obj.get("dateWithSerializer"));
+  }
+  
+  @Test
   public void testDate_withFormatter() throws Exception {
     SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
     sut.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);

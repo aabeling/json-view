@@ -183,7 +183,24 @@ public class JsonViewSerializer extends JsonSerializer<JsonView> {
 
     boolean writeSpecial(Object obj) throws IOException {
       if(obj instanceof Date) {
-        serializerProvider.defaultSerializeDateValue((Date) obj, jgen);
+          
+          JsonSerialize fieldSerializer = null;
+          if (referringField != null) {
+            fieldSerializer = getAnnotation(referringField, JsonSerialize.class);
+          }
+          if (null == fieldSerializer) {
+              serializerProvider.defaultSerializeDateValue((Date) obj, jgen);              
+          } else {
+              /* field has serializer */
+              Class<? extends JsonSerializer<?>> serializerClass = fieldSerializer.using();
+              try {
+                JsonSerializer<Date> serializer = (JsonSerializer<Date>) serializerClass.newInstance();
+                serializer.serialize((Date) obj, jgen, serializerProvider);
+            } catch (InstantiationException | IllegalAccessException e) {
+
+                e.printStackTrace();
+            }
+          }
       } else if(obj instanceof URL) {
         jgen.writeString(obj.toString());
       } else if(obj instanceof URI) {
